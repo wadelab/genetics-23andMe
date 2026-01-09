@@ -16,6 +16,11 @@ then prompt user to select a specific file for processing
 Program also compares raw genome data with data from the FoundMyFitness comprehensive
 report and provides a summary of notable matches.
 
+## GUI Usage
+To run the interactive GUI for browsing SNP summaries and Found My Fitness matches:
+
+    > python genome_gui.py
+
 ## Sample Output
 
     Opening: genome_Michael_OConnor_v4_Full_20190408081640.txt
