@@ -8,7 +8,7 @@ From directory containing raw 23andMe data, run:
 
 Raw data should be in a txt file starting with genome and ending with .txt
 
-    Eg: genome_Michael_OConnor_v4_Full_20190408081640.txt
+   Eg: genome_Example_v4_Full_20190408081640.txt
 
 Program will look in current directory for all files matching this pattern and
 then prompt user to select a specific file for processing
@@ -23,7 +23,7 @@ To run the interactive GUI for browsing SNP summaries and Found My Fitness match
 
 ## Sample Output
 
-    Opening: genome_Michael_OConnor_v4_Full_20190408081640.txt
+   Opening: genome_Example_v4_Full_20190408081640.txt
 
     Processing 601886 SNPs sorted by Chromosome
      1:..............................................

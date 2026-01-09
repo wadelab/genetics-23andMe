@@ -109,3 +109,8 @@ venv.bak/
 # MacOS
 .DS_Store
 
+# 23andMe raw genomes (PII; do not commit)
+genome*.txt
+*23andMe*.txt
+*.23andme.txt
+
