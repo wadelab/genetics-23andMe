@@ -69,11 +69,13 @@ See [docs/plan.md](docs/plan.md) for:
 - Architecture Decision Records (docs/adr/)
 - Detailed session logs with timestamps
 
-**Latest Session**: GUI refactoring complete with threading + progress bar
-- ✅ Parser robustness improved (handles various 23andMe formats)
-- ✅ Analysis pipeline refactored to background threading
-- ✅ Progress bar with 5-stage status updates (📂→📊→🔍→🌐→🎨)
-- ✅ All core functions tested and verified working
+**Latest Session**: GUI analysis now fully functional with thread-safe UI updates
+- ✅ Fixed threading issue: All UI updates now wrapped in self.after() for main thread safety
+- ✅ Progress bar and status text now properly update during analysis
+- ✅ 5-stage progress animation visible (📂→📊→🔍→🌐→🎨)
+- ✅ Analysis results render correctly without UI freezing
+- ✅ All core functions tested with real 23andMe genome file (643K SNPs)
+- ✅ Committed: ac5fbb2 - Fix GUI threading for main thread safety
 
 ## For Next Agent
 
@@ -88,4 +90,4 @@ See [docs/plan.md](docs/plan.md) for:
    - GUI and CLI are the two main entrypoints
 
 ---
-*Last updated: Session 2 (2026-02-22) - GUI debugging + progress bar + full test validation*
+*Last updated: Session 2 (2026-02-22) - Threading fix + GUI fully working*

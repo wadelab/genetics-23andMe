@@ -105,12 +105,18 @@
   - Added 5-stage progress bar with emoji status updates
   - Thread-safe error dialogs via .after()
   - Status messages: 📂 Loading → 📊 Summary → 🔍 FMF → 🌐 SNPedia → 🎨 Rendering
+- ✅ **CRITICAL FIX** - Wrapped all GUI updates in self.after():
+  - Root cause: tkinter requires all UI modifications on main thread
+  - Fixed: Status text, progress bar, rendering now update properly
+  - Result: Analysis button now fully functional with visible feedback
 - ✅ Verified all core functions with real data:
   - load_snps: 643,535 SNPs loaded in 0.63 seconds
   - compute_summary: Genotype/chromosome stats calculated
   - find_fmf_matches: 52 matches found against FMF_NOTEWORTHY
 - ✅ Created test_run.py for quick functional validation
-- ✅ Committed changes to git (commit c9f356b)
+- ✅ Committed changes:
+  - c9f356b: Refactor into src layout with uv/ruff
+  - ac5fbb2: Fix GUI threading - wrap all UI updates in self.after() for main thread safety
 
 **Status:** Phase 1 & 2 ✅ COMPLETE  
 **Test Results:**
@@ -118,6 +124,7 @@
 - File parser robust and tolerant of variant formats ✅
 - Analysis pipeline complete and functional ✅
 - Progress bar shows real-time feedback ✅
+- Results render correctly in all tabs ✅
 - No UI freezing during operations ✅
 
 **Blockers:** None
