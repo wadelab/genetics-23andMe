@@ -37,17 +37,10 @@ def load_snps(file_path):
         raise FileNotFoundError(file_path)
 
     snps = {}
-    firstline = True
     with open(file_path, "r") as fp:
         for line in fp:
             items = line.split()
             if not items:
-                continue
-
-            if firstline:
-                firstline = False
-                if "23andMe" not in items:
-                    raise ValueError("Not a 23andMe raw data file")
                 continue
 
             if items[0].startswith("#"):
@@ -57,6 +50,9 @@ def load_snps(file_path):
                 continue
 
             snps[items[0]] = items[1:]
+
+    if not snps:
+        raise ValueError("No SNP records found in file")
 
     return snps
 
@@ -1085,29 +1081,60 @@ class SNPAnalyzerApp(tk.Tk):
             messagebox.showwarning("No file selected", "Please select a 23andMe raw data file.")
             return
 
+        # Run analysis in background thread
+        analysis_thread = threading.Thread(
+            target=self._analyze_file_worker, args=(file_path,), daemon=True
+        )
+        analysis_thread.start()
+
+    def _analyze_file_worker(self, file_path):
+        """Background worker for file analysis with progress updates."""
+        # Update UI on main thread
+        self.after(0, lambda: self.status.config(text="📂 Loading file..."))
+        self.after(0, lambda: self.progress.config(mode="determinate", maximum=5, value=0))
+
         try:
             snps = load_snps(file_path)
         except FileNotFoundError:
-            messagebox.showerror("File not found", "Could not find the selected file.")
+            self.after(0, lambda: messagebox.showerror("File not found", "Could not find the selected file."))
             return
         except ValueError as exc:
-            messagebox.showerror("Invalid file", str(exc))
+            self.after(0, lambda: messagebox.showerror("Invalid file", str(exc)))
             return
         except Exception as exc:
-            messagebox.showerror("Error", "Failed to load file: {}".format(exc))
+            self.after(0, lambda: messagebox.showerror("Error", "Failed to load file: {}".format(exc)))
             return
 
-        summary = compute_summary(snps)
-        fmf_matches = find_fmf_matches(snps)
+        self.after(0, lambda: self.progress.__setitem__("value", 1))
+        self.after(0, lambda: self.status.config(text="📊 Computing summary..."))
 
-        snpedia_matches = []
-        if self.snpedia_records:
-            snpedia_matches = find_snpedia_matches(snps, self.snpedia_records)
+        try:
+            summary = compute_summary(snps)
+            self.after(0, lambda: self.progress.__setitem__("value", 2))
+            self.after(0, lambda: self.status.config(text="🔍 Finding FMF matches..."))
 
-        self.current_snps = snps
-        self._render_summary(summary)
-        self._render_fmf_matches(fmf_matches)
-        self._render_snpedia_matches(snpedia_matches)
+            fmf_matches = find_fmf_matches(snps)
+            self.after(0, lambda: self.progress.__setitem__("value", 3))
+
+            snpedia_matches = []
+            if self.snpedia_records:
+                self.after(0, lambda: self.status.config(text="🌐 Finding SNPedia matches..."))
+                snpedia_matches = find_snpedia_matches(snps, self.snpedia_records)
+                self.after(0, lambda: self.progress.__setitem__("value", 4))
+
+            self.after(0, lambda: self.status.config(text="🎨 Rendering results..."))
+            self.current_snps = snps
+            self.after(0, lambda: self._render_summary(summary))
+            self.after(0, lambda: self.progress.__setitem__("value", 4.5))
+            self.after(0, lambda: self._render_fmf_matches(fmf_matches))
+            self.after(0, lambda: self.progress.__setitem__("value", 4.75))
+            self.after(0, lambda: self._render_snpedia_matches(snpedia_matches))
+            self.after(0, lambda: self.progress.__setitem__("value", 5))
+        except Exception as exc:
+            self.after(0, lambda: messagebox.showerror("Error", "Analysis failed: {}".format(exc)))
+            self.after(0, lambda: self.status.config(text="⚠️ Analysis failed. See error dialog."))
+            self.after(0, lambda: self.progress.__setitem__("value", 0))
+            return
 
         status_bits = [
             "✨ Successfully loaded {:,} SNPs from {}".format(
@@ -1122,7 +1149,8 @@ class SNPAnalyzerApp(tk.Tk):
         else:
             status_bits.append("Load a SNPedia TSV/CSV to see SNPedia matches")
 
-        self.status.config(text=" | ".join(status_bits))
+        self.after(0, lambda: self.status.config(text=" | ".join(status_bits)))
+        self.after(0, lambda: self.progress.__setitem__("value", 0))
 
     def _render_summary(self, summary):
         self.summary_text.config(state="normal")

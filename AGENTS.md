@@ -8,16 +8,14 @@
 ## Current State
 
 ### Project Structure
-Status: **Needs refactoring** to standard Python project layout
+Status: **✅ COMPLETE** - Refactored to standard Python project layout
 
-Current files:
-- `foundMyFitness.py` - Fitness data analysis
-- `genome_gui.py` - GUI for genome data
-- `genome.py` - Core genome analysis
-- `README.md` - Project documentation
-- `LICENSE` - MIT License
+Legacy files (archived in `legacy/`):
+- `foundMyFitness.py` → `src/genetics_23andme/fitness.py`
+- `genome_gui.py` → `src/genetics_23andme/gui.py`
+- `genome.py` → `src/genetics_23andme/core.py`
 
-Desired structure:
+Current structure:
 ```
 .
 ├── pyproject.toml
@@ -57,27 +55,37 @@ uv sync                    # Create .venv and install dependencies
 ruff check .              # Run linter
 ruff format .             # Format code
 ruff check --fix .        # Fix auto-fixable issues
+uv run pytest tests/       # Run tests
 
 # Running
-python -m genetics_23andme.gui     # Launch GUI
+uv run python -m genetics_23andme.gui     # Launch GUI (interactive)
+uv run python -m genetics_23andme.core     # Run CLI (batch analysis)
 ```
 
 ## Recent Work Log
 
 See [docs/plan.md](docs/plan.md) for:
-- Implementation plan & progress
+- Implementation plan & progress tracking
 - Architecture Decision Records (docs/adr/)
-- Session handoff notes
+- Detailed session logs with timestamps
+
+**Latest Session**: GUI refactoring complete with threading + progress bar
+- ✅ Parser robustness improved (handles various 23andMe formats)
+- ✅ Analysis pipeline refactored to background threading
+- ✅ Progress bar with 5-stage status updates (📂→📊→🔍→🌐→🎨)
+- ✅ All core functions tested and verified working
 
 ## For Next Agent
 
-1. **Before starting:** Read [docs/plan.md](docs/plan.md) for current context
-2. **Check status:** Review last session's completed items
-3. **Update log:** Add session summary before handing off
-4. **Key constraints:** 
-   - Use `ruff` for all linting/formatting
-   - Use `uv` for dependency management
-   - Maintain this handoff format for continuity
+1. **Before starting:** Read [docs/plan.md](docs/plan.md) for session history and architecture
+2. **Check status:** Review completed items and blockers in plan.md
+3. **Test the code:** `uv run python test_run.py` for quick functional check
+4. **Update log:** Add your session summary to docs/plan.md before handing off
+5. **Key constraints:** 
+   - Use `ruff` for all linting/formatting (line length 100)
+   - Use `uv` for all Python dependency management
+   - Maintain this 3-section handoff format for continuity
+   - GUI and CLI are the two main entrypoints
 
 ---
-*Last updated: Session [date] - [brief summary]*
+*Last updated: Session 2 (2026-02-22) - GUI debugging + progress bar + full test validation*
