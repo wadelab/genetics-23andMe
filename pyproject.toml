@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "genetics-23andme"
+version = "0.1.0"
+description = "23andMe genome analysis and fitness data visualization tools"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Michael E. OConnor"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0.0;python_version>='3.8'",  # Optional, graceful degradation if missing
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1.0",
+]
+
+[tool.ruff]
+# Enforce Python 3.10+ compatibility
+target-version = "py310"
+line-length = 100
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "C",   # flake8-comprehensions
+    "B",   # flake8-bugbear
+]
+ignore = [
+    "E501",  # Line too long (handled by formatter)
+    "E203",  # Blank line before colon
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["genetics_23andme"]
+known-third-party = ["openai"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "--strict-markers --tb=short"
+
+[tool.coverage.run]
+source = ["src/genetics_23andme"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]

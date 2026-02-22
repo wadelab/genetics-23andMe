@@ -1,25 +1,65 @@
 # genetics-23andMe
-Python program to parse and analyze raw 23andMe data
+Python tools to parse and analyze raw 23andMe data, including a GUI for SNP review
+and Found My Fitness matches.
 
-## Usage
-From directory containing raw 23andMe data, run:
+## Setup
+This project uses `uv` for the virtual environment and dependencies.
 
-    > python genome.py
+   uv sync
 
-Raw data should be in a txt file starting with genome and ending with .txt
+This creates a local `.venv` and installs all dependencies.
 
-   Eg: genome_Example_v4_Full_20190408081640.txt
+## CLI Usage
+From a directory containing your raw 23andMe data file(s):
 
-Program will look in current directory for all files matching this pattern and
-then prompt user to select a specific file for processing
+   uv run python -m genetics_23andme.core
 
-Program also compares raw genome data with data from the FoundMyFitness comprehensive
-report and provides a summary of notable matches.
+Raw data should be in a txt file starting with `genome_` and ending with `.txt`.
+Example: `genome_Example_v4_Full_20190408081640.txt`
+
+The program will scan the current directory, show matching files, and prompt you
+to select one for processing. It will also compare against Found My Fitness
+noteworthy SNPs and report matches.
 
 ## GUI Usage
 To run the interactive GUI for browsing SNP summaries and Found My Fitness matches:
 
-    > python genome_gui.py
+   uv run python -m genetics_23andme.gui
+
+## Optional: SNPedia + OpenAI Synthesis
+The GUI can fetch SNPedia summaries. If you want AI synthesis of the results,
+set the `OPENAI_API_KEY` environment variable before launching the GUI.
+
+## Project Layout
+```
+.
+├── pyproject.toml
+├── uv.lock
+├── AGENTS.md
+├── README.md
+│
+├── src/
+│   └── genetics_23andme/
+│       ├── __init__.py
+│       ├── core.py
+│       ├── gui.py
+│       └── fitness.py
+│
+├── tests/
+│   └── test_core.py
+│
+└── docs/
+   ├── plan.md
+   └── adr/
+```
+
+## Legacy Files
+The original scripts were moved to [legacy/](legacy/) for reference:
+- `genome.py`
+- `genome_gui.py`
+- `foundMyFitness.py`
+
+New development should use the `src/genetics_23andme/` modules.
 
 ## Sample Output
 
